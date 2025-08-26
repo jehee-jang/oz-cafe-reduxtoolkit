@@ -1,42 +1,29 @@
-import { combineReducers, legacy_createStore } from "redux"
 import data from "../assets/data"
+import { configureStore, createSlice } from "@reduxjs/toolkit"
 
-//Action
-export const addToCart = (options, quantity, id) => {
-    return {
-        type: 'addToCart',
-        payload : {options, quantity, id}
+export const menuSlice = createSlice({
+    name: 'menu',
+    initialState: data.menu,
+    reducers:{
     }
-}
+})
+//상태 변경 없기 때문에 reducers 비워놓고 사용
 
-export const removeFromCart = (id) => {
-    return {
-        type: 'removeFromCart',
-        payload : {id}
+export const cartSlice = createSlice({
+    name: 'cart',
+    initialState: [],
+    reducers:{
+        addToCart(state, action) {return [...state, action.payload]},
+        removeFromCart(state, action) {return state.filter(el => action.payload !== el.id)}
     }
-}
+})
+//createSlice를 사용하여 만든 action creater에 인자를 전달하면 
+//인자들은 payload라는 이름으로 들어옴
 
-//Reducer
-const cartReducer = (state = [], action) => {
-    switch (action.type) {
-        case 'addToCart':
-            return [...state, action.payload]
-        case 'removeFromCart':
-            return state.filter(el => action.payload.id !== el.id)
-        default:
-            return state
+export const store = configureStore({
+    reducer: {
+        menu: menuSlice.reducer,
+        cart: cartSlice.reducer
     }
-}
+})
 
-const menuReducer = (state = data.menu, action) => {
-    return state
-}
-//메뉴 데이터가 변경될 일 없음 -> state 유지되도록 리턴
-
-//combine으로 reducer 합치기
-const rootReducer = combineReducers({cartReducer, menuReducer})
-
-//Store
-export const Store = legacy_createStore(rootReducer)
-
-//과제
