@@ -38,3 +38,5 @@ const rootReducer = combineReducers({cartReducer, menuReducer})
 
 //Store
 export const Store = legacy_createStore(rootReducer)
+
+//과제
